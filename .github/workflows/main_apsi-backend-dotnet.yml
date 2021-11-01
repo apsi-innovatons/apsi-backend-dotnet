@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'apsi-backend-dotnet'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E304F3B1D2CB4D3FBBE17D575E912160 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F0A73A61282A4477ADE84240B940D59D }}
           package: .
