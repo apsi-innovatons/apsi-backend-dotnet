@@ -37,6 +37,15 @@ namespace apsi.backend.social
             );
 
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                //may need to switch on prod to defined cors
+                options.AddDefaultPolicy(builder => 
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "apsi.backend.social", Version = "v1" });
