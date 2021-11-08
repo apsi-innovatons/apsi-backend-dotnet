@@ -17,6 +17,8 @@ using Apsi.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace apsi.backend.social
 {
@@ -36,8 +38,12 @@ namespace apsi.backend.social
                     opt.UseSqlServer(Configuration.GetConnectionString("Default"), ssopt => ssopt.CommandTimeout(300))
             );
 
-            services.AddControllers();
-
+            services.AddControllers().AddControllersAsServices().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            });
             services.AddCors(options =>
             {
                 //may need to switch on prod to defined cors
@@ -102,6 +108,9 @@ namespace apsi.backend.social
                     };
                 });
 
+            services.AddSwaggerGenNewtonsoftSupport();
+
+
             // configure DI for application services
             DependencyInjection.Setup(services);
         }
@@ -109,6 +118,8 @@ namespace apsi.backend.social
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
