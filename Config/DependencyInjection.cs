@@ -8,6 +8,8 @@ namespace apsi.backend.social.Config
         public static void Setup(IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ISocialGroupService, SocialGroupService>();
         }
     }
 }
