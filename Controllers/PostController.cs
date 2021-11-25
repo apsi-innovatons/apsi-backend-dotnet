@@ -12,6 +12,7 @@ using apsi.backend.social.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Apsi.Backend.Social.Controllers
 {
@@ -55,7 +56,7 @@ namespace Apsi.Backend.Social.Controllers
         [HttpPost("CreatePost")]
         public async Task<ActionResult<int>> CreatePost(CreatePostDto post)
         {
-            var name = HttpContext.User.Identity.Name;
+            var name = ClaimTypes.Name;
             if(name == null)
             {
                 return BadRequest("Post not created, no user");
