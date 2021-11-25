@@ -29,11 +29,6 @@ namespace apsi.backend.social.Services
             return dbGroup.Id;
         }
 
-        public Task<int> Delete(string socialGroupName)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<SocialGroupIdDto>> Get(SocialGroupPagingDto socialGroupPaging)
         {
             return await _context.SocialGroups.Where(x => x.Name.Contains(socialGroupPaging.Name))
@@ -51,7 +46,12 @@ namespace apsi.backend.social.Services
                 .ToListAsync();
         }
 
-        public Task<int?> Update(SocialGroupDto socialGroup)
+        public async Task<SocialGroup> GetDbDataByName(string socialGroupName)
+        {
+            return await _context.SocialGroups.Where(x => x.Name.Equals(socialGroupName)).FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> Update(SocialGroupDto socialGroup)
         {
             throw new NotImplementedException();
         }
