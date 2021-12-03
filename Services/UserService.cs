@@ -8,6 +8,7 @@ using apsi.backend.social.Models;
 using Apsi.Database;
 using Apsi.Database.Entities;
 using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,12 @@ namespace apsi.backend.social.Services
         {
             _appSettings = appSettings;
             _context = context;
+        }
+
+        //For authorization testing purposes
+        public async Task<User> GetUserById(int id)
+        {
+            return await _context.Users.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
         }
 
         public async Task<LoggedUserDto> Authenticate(string username, string password)
