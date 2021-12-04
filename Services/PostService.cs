@@ -95,5 +95,20 @@ namespace apsi.backend.social.Services
                 return null;
             }
         }
+
+        public async Task<int?> DeletePostById(int id)
+        {
+            var post = await GetPostByIdDb(id);
+            if(post == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+                return id;
+            }
+        }
     }
 }

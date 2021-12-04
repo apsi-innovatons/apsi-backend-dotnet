@@ -14,6 +14,7 @@ namespace apsi.backend.social.Services
         public Task<Post> GetPostByIdDb(int id);
         public Task<List<PostDto>> GetAll(PagingDto paging);
         public Task<int?> CreatePost(CreatePostDto post, User user, SocialGroup socialGroup);
+        public Task<int?> DeletePostById(int id);
         public Task<int?> CreatePostAnswer(CreatePostAnswerDto postAnswer, User user);
     }
 }
