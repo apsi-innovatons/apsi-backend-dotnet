@@ -55,13 +55,45 @@ namespace apsi.backend.social.Services
                 .ToListAsync();
         }
 
-        public async Task<PostDto> GetPostById(IdPagingDto idPaging)
+
+        public async Task<PostDto> GetPostById(int id)
         {
-            return await _context.Posts.Where(x => x.Id.Equals(idPaging.Id))
+            return await _context.Posts.Where(x => x.Id.Equals(id))
                 .OrderBy(x => x.Author.Username)
-                .Skip(idPaging.count * idPaging.page).Take(idPaging.count)
                 .ProjectToType<PostDto>()
                 .FirstOrDefaultAsync();
+        }
+        public async Task<Post> GetPostByIdDb(int id)
+        {
+            return await _context.Posts.Where(x => x.Id.Equals(id))
+                .OrderBy(x => x.Author.Username)
+                .FirstOrDefaultAsync();
+        }
+
+
+        public async Task<int?> CreatePostAnswer(CreatePostAnswerDto postAnswer, User user)
+        {
+            var post = await GetPostByIdDb(postAnswer.PostId);
+            if(post != null)
+            {
+                var answer = new PostAnswer();
+                answer.Id = null;
+                answer.Author = user;
+                answer.Text = postAnswer.Text;
+
+                await _context.PostAnswers.AddAsync(answer);
+                await _context.SaveChangesAsync();
+
+                if (post.PostAnswers == null) post.PostAnswers = new List<PostAnswer>();
+                post.PostAnswers.Add(answer);
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+                return answer.Id;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

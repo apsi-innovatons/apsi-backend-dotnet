@@ -41,10 +41,10 @@ namespace Apsi.Backend.Social.Controllers
             return await _postService.GetPostsByAuthor(authorPaging);
         }
 
-        [HttpGet("GetPostsById")]
-        public async Task<ActionResult<PostDto>> GetPostById([FromQuery] IdPagingDto idPaging)
+        [HttpGet("GetPostById")]
+        public async Task<ActionResult<PostDto>> GetPostById(int id)
         {
-            return await _postService.GetPostById(idPaging);
+            return await _postService.GetPostById(id);
         }
 
         [HttpGet("GetAll")]
@@ -73,6 +73,29 @@ namespace Apsi.Backend.Social.Controllers
                 else
                 {
                     return Ok(postId);
+                }
+            }
+        }
+
+        [HttpPost("CreatePostAnswer")]
+        public async Task<ActionResult<int>> CreatePostAnswer(CreatePostAnswerDto postAnswer)
+        {
+            var name = ClaimTypes.Name;
+            if(name == null)
+            {
+                return BadRequest("Post not created, no user");
+            }
+            else
+            {
+                var dbUser = await _userService.GetUserById(int.Parse(HttpContext.User.Identity.Name));
+                var postAnswerId = await _postService.CreatePostAnswer(postAnswer, dbUser);
+                if (postAnswerId == null)
+                {
+                    return BadRequest("Post not created");
+                }
+                else
+                {
+                    return Ok(postAnswerId);
                 }
             }
         }
