@@ -122,14 +122,14 @@ namespace apsi.backend.social.Services
         }
         public async Task<int?> DeletePostAnswerById(int id)
         {
-            var post = await GetPostAnswerByIdDb(id);
-            if(post == null)
+            var answer = await GetPostAnswerByIdDb(id);
+            if(answer == null)
             {
                 return null;
             }
             else
             {
-                _context.PostAnswers.Remove(post);
+                _context.PostAnswers.Remove(answer);
                 await _context.SaveChangesAsync();
                 return id;
             }
