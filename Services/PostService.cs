@@ -55,13 +55,148 @@ namespace apsi.backend.social.Services
                 .ToListAsync();
         }
 
-        public async Task<PostDto> GetPostById(IdPagingDto idPaging)
+
+        public async Task<PostDto> GetPostById(int id)
         {
-            return await _context.Posts.Where(x => x.Id.Equals(idPaging.Id))
-                .OrderBy(x => x.Author.Username)
-                .Skip(idPaging.count * idPaging.page).Take(idPaging.count)
+            return await _context.Posts.Where(x => x.Id.Equals(id))
                 .ProjectToType<PostDto>()
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<PostAnswerDto> GetPostAnswerById(int id)
+        {
+            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+                .ProjectToType<PostAnswerDto>()
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Post> GetPostByIdDb(int id)
+        {
+            return await _context.Posts.Where(x => x.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
+        public async Task<PostAnswer> GetPostAnswerByIdDb(int id)
+        {
+            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> CreatePostAnswer(CreatePostAnswerDto postAnswer, User user)
+        {
+            var post = await GetPostByIdDb(postAnswer.PostId);
+            if(post != null)
+            {
+                var answer = new PostAnswer();
+                answer.Id = null;
+                answer.Author = user;
+                answer.Text = postAnswer.Text;
+
+                await _context.PostAnswers.AddAsync(answer);
+                await _context.SaveChangesAsync();
+
+                if (post.PostAnswers == null) post.PostAnswers = new List<PostAnswer>();
+                post.PostAnswers.Add(answer);
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+                return answer.Id;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<int?> DeletePostById(int id)
+        {
+            var post = await GetPostByIdDb(id);
+            if(post == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+                return id;
+            }
+        }
+        public async Task<int?> DeletePostAnswerById(int id)
+        {
+            var answer = await GetPostAnswerByIdDb(id);
+            if(answer == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.PostAnswers.Remove(answer);
+                await _context.SaveChangesAsync();
+                return id;
+            }
+        }
+
+
+        public async Task<List<PostDto>> GetPostsByTitle(StringPagingDto titlePaging)
+        {
+            return await _context.Posts.Where(x => x.Title.Contains(titlePaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(titlePaging.count * titlePaging.page).Take(titlePaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+        public async Task<List<PostDto>> GetPostsByText(StringPagingDto textPaging)
+        {
+            return await _context.Posts.Where(x => x.Text.Contains(textPaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(textPaging.count * textPaging.page).Take(textPaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+        public async Task<List<PostDto>> GetPostsByAnswerText(StringPagingDto textPaging)
+        {
+            var posts = await GetAll(textPaging);
+            var postsWithAnswerText = new List<PostDto>();
+
+            foreach (PostDto post in posts)
+            {
+                foreach(PostAnswerDto answer in post.PostAnswers)
+                {
+                    if (answer.Text.Contains(textPaging.String))
+                    {
+                        postsWithAnswerText.Add(post);
+                        break;
+                    }
+                }
+            }
+            return postsWithAnswerText;
+        }
+
+        public async Task<List<PostDto>> GetPostsByAnswerAuthor(AuthorPagingDto authorPaging)
+        {
+            var posts = await GetAll(authorPaging);
+            var postsWithAnswerAuthor = new List<PostDto>();
+
+            foreach (PostDto post in posts)
+            {
+                foreach(PostAnswerDto answer in post.PostAnswers)
+                {
+                    if (answer.Author.Username.Contains(authorPaging.AuthorUsername))
+                    {
+                        postsWithAnswerAuthor.Add(post);
+                        break;
+                    }
+                }
+            }
+
+            return postsWithAnswerAuthor;
+        }
+
+        public async Task<int> GetPostsCount()
+        {
+            return await _context.Posts.CountAsync();
+        }
+
     }
 }

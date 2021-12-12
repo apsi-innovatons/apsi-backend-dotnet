@@ -15,5 +15,6 @@ namespace apsi.backend.social.Models
         public DateTime Date { get; set; }
         public SocialGroupIdDto SocialGroup { get; set; }
         public UserDto Author { get; set; }
+        public List<PostAnswerDto> PostAnswers { get; set; }
     }
 }

@@ -41,10 +41,31 @@ namespace Apsi.Backend.Social.Controllers
             return await _postService.GetPostsByAuthor(authorPaging);
         }
 
-        [HttpGet("GetPostsById")]
-        public async Task<ActionResult<PostDto>> GetPostById([FromQuery] IdPagingDto idPaging)
+        [HttpGet("GetPostById")]
+        public async Task<ActionResult<PostDto>> GetPostById(int id)
         {
-            return await _postService.GetPostById(idPaging);
+            return await _postService.GetPostById(id);
+        }
+
+        [HttpGet("GetPostsByTitle")]
+        public async Task<ActionResult<List<PostDto>>> GetPostByTitle([FromQuery] StringPagingDto titlePaging)
+        {
+            return await _postService.GetPostsByTitle(titlePaging);
+        }
+        [HttpGet("GetPostsByText")]
+        public async Task<ActionResult<List<PostDto>>> GetPostByText([FromQuery ]StringPagingDto textPaging)
+        {
+            return await _postService.GetPostsByText(textPaging);
+        }
+        [HttpGet("GetPostsByAnswerText")]
+        public async Task<ActionResult<List<PostDto>>> GetPostsByAnswerText([FromQuery] StringPagingDto textPaging)
+        {
+            return await _postService.GetPostsByAnswerText(textPaging);
+        }
+        [HttpGet("GetPostsByAnswerAuthor")]
+        public async Task<ActionResult<List<PostDto>>> GetPostsByAnswerAuthor([FromQuery] AuthorPagingDto authorPaging )
+        {
+            return await _postService.GetPostsByAnswerAuthor(authorPaging);
         }
 
         [HttpGet("GetAll")]
@@ -74,6 +95,63 @@ namespace Apsi.Backend.Social.Controllers
                 {
                     return Ok(postId);
                 }
+            }
+        }
+
+        //[HttpPost("DeletePost")]
+        //public async Task<ActionResult<int>> DeletePostById(int id)
+        //{
+        //    var result = await _postService.DeletePostById(id);
+        //    return GetResultOrBadRequest(result, "Post to delete not found");
+        //}
+
+        [HttpPost("CreatePostAnswer")]
+        public async Task<ActionResult<int>> CreatePostAnswer(CreatePostAnswerDto postAnswer)
+        {
+            var name = ClaimTypes.Name;
+            if(name == null)
+            {
+                return BadRequest("Post not created, no user");
+            }
+            else
+            {
+                var dbUser = await _userService.GetUserById(int.Parse(HttpContext.User.Identity.Name));
+                var postAnswerId = await _postService.CreatePostAnswer(postAnswer, dbUser);
+                if (postAnswerId == null)
+                {
+                    return BadRequest("Post not created");
+                }
+                else
+                {
+                    return Ok(postAnswerId);
+                }
+            }
+        }
+
+        [HttpPost("DeletePostAnswer")]
+        public async Task<ActionResult<int>> DeletePostAnswerById(int id)
+        {
+            var result = await _postService.DeletePostAnswerById(id);
+            return GetResultOrBadRequest(result, "Post to be deleted not found");
+
+        }
+
+        [HttpGet("GetPostsCount")]
+        public async Task<ActionResult<int>> GetPostsCount()
+        {
+            return await _postService.GetPostsCount();
+        }
+
+
+        private ActionResult<int> GetResultOrBadRequest(int? result, string badRequestText)
+        {
+            if (result == null)
+            {
+                return BadRequest(badRequestText);
+            }
+            else
+            {
+                return result;
             }
         }
     }
