@@ -110,5 +110,62 @@ namespace apsi.backend.social.Services
                 return id;
             }
         }
+
+        public async Task<List<PostDto>> GetPostsByTitle(StringPagingDto titlePaging)
+        {
+            return await _context.Posts.Where(x => x.Title.Contains(titlePaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(titlePaging.count * titlePaging.page).Take(titlePaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+        public async Task<List<PostDto>> GetPostsByText(StringPagingDto textPaging)
+        {
+            return await _context.Posts.Where(x => x.Text.Contains(textPaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(textPaging.count * textPaging.page).Take(textPaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+        public async Task<List<PostDto>> GetPostsByAnswerText(StringPagingDto textPaging)
+        {
+            var posts = await GetAll(textPaging);
+            var postsWithAnswerText = new List<PostDto>();
+
+            foreach (PostDto post in posts)
+            {
+                foreach(PostAnswerDto answer in post.PostAnswers)
+                {
+                    if (answer.Text.Contains(textPaging.String))
+                    {
+                        postsWithAnswerText.Add(post);
+                        break;
+                    }
+                }
+            }
+            return postsWithAnswerText;
+        }
+
+        public async Task<List<PostDto>> GetPostsByAnswerAuthor(AuthorPagingDto authorPaging)
+        {
+            var posts = await GetAll(authorPaging);
+            var postsWithAnswerAuthor = new List<PostDto>();
+
+            foreach (PostDto post in posts)
+            {
+                foreach(PostAnswerDto answer in post.PostAnswers)
+                {
+                    if (answer.Author.Username.Contains(authorPaging.AuthorUsername))
+                    {
+                        postsWithAnswerAuthor.Add(post);
+                        break;
+                    }
+                }
+            }
+
+            return postsWithAnswerAuthor;
+        }
     }
 }

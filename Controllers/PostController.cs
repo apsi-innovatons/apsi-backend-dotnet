@@ -47,6 +47,27 @@ namespace Apsi.Backend.Social.Controllers
             return await _postService.GetPostById(id);
         }
 
+        [HttpGet("GetPostsByTitle")]
+        public async Task<ActionResult<List<PostDto>>> GetPostByTitle([FromQuery] StringPagingDto titlePaging)
+        {
+            return await _postService.GetPostsByTitle(titlePaging);
+        }
+        [HttpGet("GetPostsByText")]
+        public async Task<ActionResult<List<PostDto>>> GetPostByText([FromQuery ]StringPagingDto textPaging)
+        {
+            return await _postService.GetPostsByText(textPaging);
+        }
+        [HttpGet("GetPostsByAnswerText")]
+        public async Task<ActionResult<List<PostDto>>> GetPostsByAnswerText([FromQuery] StringPagingDto textPaging)
+        {
+            return await _postService.GetPostsByAnswerText(textPaging);
+        }
+        [HttpGet("GetPostsByAnswerAuthor")]
+        public async Task<ActionResult<List<PostDto>>> GetPostsByAnswerAuthor([FromQuery] AuthorPagingDto authorPaging )
+        {
+            return await _postService.GetPostsByAnswerAuthor(authorPaging);
+        }
+
         [HttpGet("GetAll")]
         public async Task<ActionResult<List<PostDto>>> GetAllPosts([FromQuery] PagingDto paging)
         {
@@ -81,14 +102,7 @@ namespace Apsi.Backend.Social.Controllers
         public async Task<ActionResult<int>> DeletePostById(int id)
         {
             var result = await _postService.DeletePostById(id);
-            if(result == null)
-            {
-                return BadRequest("Post to delete not found");
-            }
-            else
-            {
-                return result;
-            }
+            return GetResultOrBadRequest(result, "Post to delete not found");
         }
 
         [HttpPost("CreatePostAnswer")]
@@ -111,6 +125,26 @@ namespace Apsi.Backend.Social.Controllers
                 {
                     return Ok(postAnswerId);
                 }
+            }
+        }
+
+        [HttpPost("DeletePostAnswer")]
+        public async Task<ActionResult<int>> DeletePostAnswerById(int id)
+        {
+            var result = await _postService.DeletePostById(id);
+            return GetResultOrBadRequest(result, "Post to be deleted not found");
+
+        }
+
+        private ActionResult<int> GetResultOrBadRequest(int? result, string badRequestText)
+        {
+            if (result == null)
+            {
+                return BadRequest(badRequestText);
+            }
+            else
+            {
+                return result;
             }
         }
     }
