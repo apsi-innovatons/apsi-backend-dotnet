@@ -193,5 +193,10 @@ namespace apsi.backend.social.Services
             return postsWithAnswerAuthor;
         }
 
+        public async Task<int> GetPostsCount()
+        {
+            return await _context.Posts.CountAsync();
+        }
+
     }
 }

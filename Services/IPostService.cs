@@ -23,6 +23,7 @@ namespace apsi.backend.social.Services
         public Task<int?> DeletePostById(int id);
         public Task<int?> DeletePostAnswerById(int id);
         public Task<int?> CreatePostAnswer(CreatePostAnswerDto postAnswer, User user);
+        public Task<int> GetPostsCount();
         
     }
 }
