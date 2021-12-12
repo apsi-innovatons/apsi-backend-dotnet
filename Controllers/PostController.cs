@@ -131,7 +131,7 @@ namespace Apsi.Backend.Social.Controllers
         [HttpPost("DeletePostAnswer")]
         public async Task<ActionResult<int>> DeletePostAnswerById(int id)
         {
-            var result = await _postService.DeletePostById(id);
+            var result = await _postService.DeletePostAnswerById(id);
             return GetResultOrBadRequest(result, "Post to be deleted not found");
 
         }

@@ -59,17 +59,27 @@ namespace apsi.backend.social.Services
         public async Task<PostDto> GetPostById(int id)
         {
             return await _context.Posts.Where(x => x.Id.Equals(id))
-                .OrderBy(x => x.Author.Username)
                 .ProjectToType<PostDto>()
                 .FirstOrDefaultAsync();
         }
-        public async Task<Post> GetPostByIdDb(int id)
+
+        public async Task<PostAnswerDto> GetPostAnswerById(int id)
         {
-            return await _context.Posts.Where(x => x.Id.Equals(id))
-                .OrderBy(x => x.Author.Username)
+            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+                .ProjectToType<PostAnswerDto>()
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Post> GetPostByIdDb(int id)
+        {
+            return await _context.Posts.Where(x => x.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
+        public async Task<PostAnswer> GetPostAnswerByIdDb(int id)
+        {
+            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<int?> CreatePostAnswer(CreatePostAnswerDto postAnswer, User user)
         {
@@ -110,6 +120,21 @@ namespace apsi.backend.social.Services
                 return id;
             }
         }
+        public async Task<int?> DeletePostAnswerById(int id)
+        {
+            var post = await GetPostAnswerByIdDb(id);
+            if(post == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.PostAnswers.Remove(post);
+                await _context.SaveChangesAsync();
+                return id;
+            }
+        }
+
 
         public async Task<List<PostDto>> GetPostsByTitle(StringPagingDto titlePaging)
         {
@@ -167,5 +192,6 @@ namespace apsi.backend.social.Services
 
             return postsWithAnswerAuthor;
         }
+
     }
 }
