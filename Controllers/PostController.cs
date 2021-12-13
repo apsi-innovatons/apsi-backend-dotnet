@@ -142,6 +142,12 @@ namespace Apsi.Backend.Social.Controllers
             return await _postService.GetPostsCount();
         }
 
+        [HttpGet("GetPostAnswersCountByPostId")]
+        public async Task<ActionResult<int>> GetPostAnswersCountByPostId(int id)
+        {
+            return await _postService.GetPostAnswersCountByPostId(id);
+        }
+
 
         private ActionResult<int> GetResultOrBadRequest(int? result, string badRequestText)
         {

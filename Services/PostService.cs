@@ -199,5 +199,24 @@ namespace apsi.backend.social.Services
             return await _context.Posts.CountAsync();
         }
 
+        public async Task<int?> UpdatePost(CreatePostDto post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int?> GetPostAnswersCountByPostId(int id)
+        {
+            Post post = await GetPostByIdDb(id);
+            if(post != null)
+            {
+                return post.PostAnswers.Count;
+            }
+            return null;
+        }
+
+        public async Task<int?> UpdatePostAnswer(CreatePostAnswerDto postAnswer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
