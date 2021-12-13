@@ -210,12 +210,23 @@ namespace apsi.backend.social.Services
             return null;
         }
 
-        public Task<int?> UpdatePost(UpdatePostDto post)
+        public async Task<int?> UpdatePost(UpdatePostDto post, SocialGroup socialGroup)
         {
-            throw new NotImplementedException();
+            Post postDb = await GetPostByIdDb(post.PostId);
+            if (postDb != null)
+            {
+                postDb.Title = post.Title;
+                postDb.Text = post.Text;
+                postDb.SocialGroup = socialGroup;
+
+                _context.Update(postDb);
+                await _context.SaveChangesAsync();
+                return postDb.Id;
+            }
+            return null;
         }
 
-        public Task<int?> UpdatePostAnswer(UpdatePostAnswerDto postAnswer)
+        public async Task<int?> UpdatePostAnswer(UpdatePostAnswerDto postAnswer)
         {
             throw new NotImplementedException();
         }

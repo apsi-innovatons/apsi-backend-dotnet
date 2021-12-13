@@ -18,7 +18,7 @@ namespace apsi.backend.social.Services
         public Task<List<PostDto>> GetPostsByAnswerText(StringPagingDto textPaging);
         public Task<List<PostDto>> GetPostsByAnswerAuthor(AuthorPagingDto authorPaging);
         public Task<int?> CreatePost(CreatePostDto post, User user, SocialGroup socialGroup);
-        public Task<int?> UpdatePost(UpdatePostDto post);
+        public Task<int?> UpdatePost(UpdatePostDto post, SocialGroup socialGroup);
         public Task<int?> DeletePostById(int id);
         public Task<int> GetPostsCount();
         public Task<int?> GetPostAnswersCountByPostId(int id);

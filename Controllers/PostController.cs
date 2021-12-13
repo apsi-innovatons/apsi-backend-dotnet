@@ -87,14 +87,7 @@ namespace Apsi.Backend.Social.Controllers
                 var dbUser = await _userService.GetUserById(int.Parse(HttpContext.User.Identity.Name));
                 var dbSocialGroup = await _socialGroupService.GetDbDataByName(post.socialGroupName);;
                 var postId = await _postService.CreatePost(post, dbUser, dbSocialGroup);
-                if (postId == null)
-                {
-                    return BadRequest("Post not created");
-                }
-                else
-                {
-                    return Ok(postId);
-                }
+                return GetResultOrNotFound(postId, "Post not created");
             }
         }
 
@@ -102,7 +95,7 @@ namespace Apsi.Backend.Social.Controllers
         public async Task<ActionResult<int>> DeletePostById(int id)
         {
             var result = await _postService.DeletePostById(id);
-            return GetResultOrBadRequest(result, "Post to delete not found");
+            return GetResultOrNotFound(result, "Post to delete not found");
         }
 
         [HttpPost("CreatePostAnswer")]
@@ -111,20 +104,13 @@ namespace Apsi.Backend.Social.Controllers
             var name = ClaimTypes.Name;
             if(name == null)
             {
-                return BadRequest("Post not created, no user");
+                return NotFound("Post not created, no user");
             }
             else
             {
                 var dbUser = await _userService.GetUserById(int.Parse(HttpContext.User.Identity.Name));
                 var postAnswerId = await _postService.CreatePostAnswer(postAnswer, dbUser);
-                if (postAnswerId == null)
-                {
-                    return BadRequest("Post not created");
-                }
-                else
-                {
-                    return Ok(postAnswerId);
-                }
+                return GetResultOrNotFound(postAnswerId, "Post not created");
             }
         }
 
@@ -132,7 +118,7 @@ namespace Apsi.Backend.Social.Controllers
         public async Task<ActionResult<int>> DeletePostAnswerById(int id)
         {
             var result = await _postService.DeletePostAnswerById(id);
-            return GetResultOrBadRequest(result, "Post to be deleted not found");
+            return GetResultOrNotFound(result, "Post to be deleted not found");
 
         }
 
@@ -148,12 +134,28 @@ namespace Apsi.Backend.Social.Controllers
             return await _postService.GetPostAnswersCountByPostId(id);
         }
 
+        [HttpPut("UpdatePost")]
+        public async Task<ActionResult<int>> UpdatePost([FromQuery] UpdatePostDto updatePostDto)
+        {
+            var socialgroupDb = await _socialGroupService.GetDbDataByName(updatePostDto.socialGroupName);
+            if(socialgroupDb != null)
+            {
+                var result = await _postService.UpdatePost(updatePostDto, socialgroupDb);
+                return GetResultOrNotFound(result, "Post to be updated not found");
+            }
+            else
+            {
+                return NotFound("Socialgroup not found");
+            }
+        }
 
-        private ActionResult<int> GetResultOrBadRequest(int? result, string badRequestText)
+
+
+        private ActionResult<int> GetResultOrNotFound(int? result, string badRequestText)
         {
             if (result == null)
             {
-                return BadRequest(badRequestText);
+                return NotFound(badRequestText);
             }
             else
             {
