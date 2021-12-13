@@ -98,7 +98,7 @@ namespace Apsi.Backend.Social.Controllers
             }
         }
 
-        [HttpPost("DeletePost")]
+        [HttpDelete("DeletePost")]
         public async Task<ActionResult<int>> DeletePostById(int id)
         {
             var result = await _postService.DeletePostById(id);
@@ -128,7 +128,7 @@ namespace Apsi.Backend.Social.Controllers
             }
         }
 
-        [HttpPost("DeletePostAnswer")]
+        [HttpDelete("DeletePostAnswer")]
         public async Task<ActionResult<int>> DeletePostAnswerById(int id)
         {
             var result = await _postService.DeletePostAnswerById(id);
