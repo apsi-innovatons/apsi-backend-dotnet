@@ -73,6 +73,7 @@ namespace apsi.backend.social.Services
         public async Task<Post> GetPostByIdDb(int id)
         {
             return await _context.Posts.Where(x => x.Id.Equals(id))
+                .ProjectToType<Post>()
                 .FirstOrDefaultAsync();
         }
         public async Task<PostAnswer> GetPostAnswerByIdDb(int id)
