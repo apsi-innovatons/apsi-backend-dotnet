@@ -237,7 +237,15 @@ namespace apsi.backend.social.Services
 
         public async Task<int?> UpdatePostAnswer(UpdatePostAnswerDto postAnswer)
         {
-            throw new NotImplementedException();
+            PostAnswer answerDb = await GetPostAnswerByIdDb(postAnswer.AnswerId);
+            if(answerDb != null)
+            {
+                answerDb.Text = postAnswer.Text;
+                _context.Update(answerDb);
+                await _context.SaveChangesAsync();
+                return answerDb.Id;
+            }
+            return null;
         }
     }
 }

@@ -153,6 +153,14 @@ namespace Apsi.Backend.Social.Controllers
             }
         }
 
+        [HttpPut("UpdatePostAnswer")]
+        public async Task<ActionResult<int>> UpdatePostAnswer([FromQuery] UpdatePostAnswerDto updateAnswerPostDto)
+        {
+            var result = await _postService.UpdatePostAnswer(updateAnswerPostDto);
+            return GetResultOrNotFound(result, "Post not found");
+        }
+
+
 
 
         private ActionResult<int> GetResultOrNotFound(int? result, string badRequestText)
