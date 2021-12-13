@@ -199,10 +199,6 @@ namespace apsi.backend.social.Services
             return await _context.Posts.CountAsync();
         }
 
-        public async Task<int?> UpdatePost(CreatePostDto post)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<int?> GetPostAnswersCountByPostId(int id)
         {
@@ -214,7 +210,12 @@ namespace apsi.backend.social.Services
             return null;
         }
 
-        public async Task<int?> UpdatePostAnswer(CreatePostAnswerDto postAnswer)
+        public Task<int?> UpdatePost(UpdatePostDto post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int?> UpdatePostAnswer(UpdatePostAnswerDto postAnswer)
         {
             throw new NotImplementedException();
         }
