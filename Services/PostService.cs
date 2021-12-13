@@ -199,5 +199,53 @@ namespace apsi.backend.social.Services
             return await _context.Posts.CountAsync();
         }
 
+
+        public async Task<int?> GetPostAnswersCountByPostId(int id)
+        {
+            Post post = await GetPostByIdDb(id);
+            if(post != null)
+            {
+                return post.PostAnswers.Count;
+            }
+            return null;
+        }
+
+        public async Task<int?> UpdatePost(UpdatePostDto post, SocialGroup socialGroup)
+        {
+            Post postDb = await GetPostByIdDb(post.PostId);
+            if (postDb != null)
+            {
+                if(post.Title != null)
+                {
+                    postDb.Title = post.Title;
+                }
+                if (post.Text != null)
+                { 
+                    postDb.Text = post.Text;
+                }
+                if (post.socialGroupName != null)
+                { 
+                    postDb.SocialGroup = socialGroup;
+                }
+
+                _context.Update(postDb);
+                await _context.SaveChangesAsync();
+                return postDb.Id;
+            }
+            return null;
+        }
+
+        public async Task<int?> UpdatePostAnswer(UpdatePostAnswerDto postAnswer)
+        {
+            PostAnswer answerDb = await GetPostAnswerByIdDb(postAnswer.AnswerId);
+            if(answerDb != null)
+            {
+                answerDb.Text = postAnswer.Text;
+                _context.Update(answerDb);
+                await _context.SaveChangesAsync();
+                return answerDb.Id;
+            }
+            return null;
+        }
     }
 }
