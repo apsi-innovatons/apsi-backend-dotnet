@@ -137,8 +137,12 @@ namespace Apsi.Backend.Social.Controllers
         [HttpPut("UpdatePost")]
         public async Task<ActionResult<int>> UpdatePost([FromQuery] UpdatePostDto updatePostDto)
         {
-            var socialgroupDb = await _socialGroupService.GetDbDataByName(updatePostDto.socialGroupName);
-            if(socialgroupDb != null)
+            SocialGroup socialgroupDb = null;
+            if (updatePostDto.socialGroupName != null)
+            {
+                socialgroupDb = await _socialGroupService.GetDbDataByName(updatePostDto.socialGroupName);
+            }
+            if(socialgroupDb != null || updatePostDto.socialGroupName == null)
             {
                 var result = await _postService.UpdatePost(updatePostDto, socialgroupDb);
                 return GetResultOrNotFound(result, "Post to be updated not found");

@@ -8,9 +8,12 @@ namespace apsi.backend.social.Models
     public class UpdatePostDto
     {
         public int PostId { get; set; }
-        public string Title { get; set; }
-        public string Text { get; set; }
-        public string socialGroupName { get; set; }
+
+        #nullable enable
+        public string? Title { get; set; }
+        public string? Text { get; set; }
+        public string? socialGroupName { get; set; }
+        #nullable disable
 
     }
 }

@@ -215,9 +215,18 @@ namespace apsi.backend.social.Services
             Post postDb = await GetPostByIdDb(post.PostId);
             if (postDb != null)
             {
-                postDb.Title = post.Title;
-                postDb.Text = post.Text;
-                postDb.SocialGroup = socialGroup;
+                if(post.Title != null)
+                {
+                    postDb.Title = post.Title;
+                }
+                if (post.Text != null)
+                { 
+                    postDb.Text = post.Text;
+                }
+                if (post.socialGroupName != null)
+                { 
+                    postDb.SocialGroup = socialGroup;
+                }
 
                 _context.Update(postDb);
                 await _context.SaveChangesAsync();
