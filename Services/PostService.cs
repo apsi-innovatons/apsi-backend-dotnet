@@ -27,6 +27,7 @@ namespace apsi.backend.social.Services
                 Id = null,
                 Title = post.Title,
                 Text = post.Text,
+                Date = System.DateTime.Now,
                 SocialGroup = socialGroup,
                 Author = user
             };
@@ -91,6 +92,7 @@ namespace apsi.backend.social.Services
                 answer.Id = null;
                 answer.Author = user;
                 answer.Text = postAnswer.Text;
+                answer.Date = System.DateTime.Now;
 
                 await _context.PostAnswers.AddAsync(answer);
                 await _context.SaveChangesAsync();
