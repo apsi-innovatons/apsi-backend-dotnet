@@ -21,13 +21,12 @@ namespace apsi.backend.social.Services
 
         public async Task<int?> CreatePost(CreatePostDto post, User user, SocialGroup socialGroup)
         {
-
             var dbPost = new Post
             {
                 Id = null,
                 Title = post.Title,
                 Text = post.Text,
-                Date = System.DateTime.Now,
+                Date = DateTime.UtcNow,
                 SocialGroup = socialGroup,
                 Author = user
             };
@@ -92,7 +91,7 @@ namespace apsi.backend.social.Services
                 answer.Id = null;
                 answer.Author = user;
                 answer.Text = postAnswer.Text;
-                answer.Date = System.DateTime.Now;
+                answer.Date = DateTime.UtcNow;
 
                 await _context.PostAnswers.AddAsync(answer);
                 await _context.SaveChangesAsync();
