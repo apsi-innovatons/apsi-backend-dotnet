@@ -87,11 +87,13 @@ namespace apsi.backend.social.Services
             var post = await GetPostByIdDb(postAnswer.PostId);
             if(post != null)
             {
-                var answer = new PostAnswer();
-                answer.Id = null;
-                answer.Author = user;
-                answer.Text = postAnswer.Text;
-                answer.Date = DateTime.UtcNow;
+                var answer = new PostAnswer()
+                {
+                    Id = null,
+                    Author = user,
+                    Text = postAnswer.Text,
+                    Date = DateTime.UtcNow
+                };
 
                 await _context.PostAnswers.AddAsync(answer);
                 await _context.SaveChangesAsync();
