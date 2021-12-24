@@ -160,9 +160,6 @@ namespace Apsi.Backend.Social.Controllers
             return GetResultOrNotFound(result, "Post not found");
         }
 
-
-
-
         private ActionResult<int> GetResultOrNotFound(int? result, string badRequestText)
         {
             if (result == null)

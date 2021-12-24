@@ -18,7 +18,6 @@ namespace apsi.backend.social.Services
         {
             _context = context;
         }
-
         public async Task<int?> CreatePost(CreatePostDto post, User user, SocialGroup socialGroup)
         {
             var dbPost = new Post
@@ -48,7 +47,8 @@ namespace apsi.backend.social.Services
 
         public async Task<List<PostDto>> GetPostsByAuthor(AuthorPagingDto authorPaging)
         {
-            return await _context.Posts.Where(x => x.Author.Username.Equals(authorPaging.AuthorUsername))
+            return await _context.Posts
+                .Where(x => x.Author.Username.Equals(authorPaging.AuthorUsername))
                 .OrderBy(x => x.Id)
                 .Skip(authorPaging.count * authorPaging.page).Take(authorPaging.count)
                 .ProjectToType<PostDto>()
@@ -58,27 +58,56 @@ namespace apsi.backend.social.Services
 
         public async Task<PostDto> GetPostById(int id)
         {
-            return await _context.Posts.Where(x => x.Id.Equals(id))
+            return await _context.Posts
+                .Where(x => x.Id.Equals(id))
                 .ProjectToType<PostDto>()
                 .FirstOrDefaultAsync();
         }
 
         public async Task<PostAnswerDto> GetPostAnswerById(int id)
         {
-            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+
+            return await _context.PostAnswers
+                .Where(x => x.Id.Equals(id))
                 .ProjectToType<PostAnswerDto>()
                 .FirstOrDefaultAsync();
         }
 
         public async Task<Post> GetPostByIdDb(int id)
         {
-            return await _context.Posts.Where(x => x.Id.Equals(id))
+            return await _context.Posts
+                .Where(x => x.Id.Equals(id))
                 .ProjectToType<Post>()
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<PostDto>> GetPostsByTitle(StringPagingDto titlePaging)
+        {
+            return await _context.Posts
+                .Where(x => x.Title.Contains(titlePaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(titlePaging.count * titlePaging.page).Take(titlePaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+        public async Task<List<PostDto>> GetPostsByText(StringPagingDto textPaging)
+        {
+            return await _context.Posts
+                .Where(x => x.Text.Contains(textPaging.String))
+                .OrderBy(x => x.Id)
+                .Skip(textPaging.count * textPaging.page).Take(textPaging.count)
+                .ProjectToType<PostDto>()
+                .ToListAsync();
+        }
+
+
+
         public async Task<PostAnswer> GetPostAnswerByIdDb(int id)
         {
-            return await _context.PostAnswers.Where(x => x.Id.Equals(id))
+            return await _context.PostAnswers
+                .Where(x => x.Id.Equals(id))
+                .ProjectToType<PostAnswer>()
                 .FirstOrDefaultAsync();
         }
 
@@ -139,25 +168,6 @@ namespace apsi.backend.social.Services
             }
         }
 
-
-        public async Task<List<PostDto>> GetPostsByTitle(StringPagingDto titlePaging)
-        {
-            return await _context.Posts.Where(x => x.Title.Contains(titlePaging.String))
-                .OrderBy(x => x.Id)
-                .Skip(titlePaging.count * titlePaging.page).Take(titlePaging.count)
-                .ProjectToType<PostDto>()
-                .ToListAsync();
-        }
-
-        public async Task<List<PostDto>> GetPostsByText(StringPagingDto textPaging)
-        {
-            return await _context.Posts.Where(x => x.Text.Contains(textPaging.String))
-                .OrderBy(x => x.Id)
-                .Skip(textPaging.count * textPaging.page).Take(textPaging.count)
-                .ProjectToType<PostDto>()
-                .ToListAsync();
-        }
-
         public async Task<List<PostDto>> GetPostsByAnswerText(StringPagingDto textPaging)
         {
             var posts = await GetAll(textPaging);
@@ -193,7 +203,6 @@ namespace apsi.backend.social.Services
                     }
                 }
             }
-
             return postsWithAnswerAuthor;
         }
 

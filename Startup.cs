@@ -19,6 +19,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Mapster;
+using Apsi.Database.Entities;
+using apsi.backend.social.Models;
 
 namespace apsi.backend.social
 {
@@ -139,6 +142,13 @@ namespace apsi.backend.social
             {
                 endpoints.MapControllers();
             });
+
+            TypeAdapterConfig<Post, PostDto>
+                .NewConfig()
+                .Map(d => d.Date, s => DateTime.SpecifyKind(s.Date, DateTimeKind.Utc));
+            TypeAdapterConfig<PostAnswer, PostAnswerDto>
+                .NewConfig()
+                .Map(d => d.Date, s => DateTime.SpecifyKind(s.Date, DateTimeKind.Utc));
         }
     }
 }
