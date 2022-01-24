@@ -69,7 +69,7 @@ namespace Apsi.Backend.Social.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<List<PostDto>>> GetAllPosts([FromQuery] PagingDto paging)
+        public async Task<ActionResult<List<PostDto>>> GetAllPosts([FromQuery] PagingSortDto paging)
         {
             return await _postService.GetAll(paging);
         }
@@ -104,13 +104,13 @@ namespace Apsi.Backend.Social.Controllers
             var name = ClaimTypes.Name;
             if(name == null)
             {
-                return NotFound("Post not created, no user");
+                return NotFound("Post answer not created, no user");
             }
             else
             {
                 var dbUser = await _userService.GetUserById(int.Parse(HttpContext.User.Identity.Name));
                 var postAnswerId = await _postService.CreatePostAnswer(postAnswer, dbUser);
-                return GetResultOrNotFound(postAnswerId, "Post not created");
+                return GetResultOrNotFound(postAnswerId, "Post answer not created");
             }
         }
 
@@ -118,7 +118,7 @@ namespace Apsi.Backend.Social.Controllers
         public async Task<ActionResult<int>> DeletePostAnswerById(int id)
         {
             var result = await _postService.DeletePostAnswerById(id);
-            return GetResultOrNotFound(result, "Post to be deleted not found");
+            return GetResultOrNotFound(result, "Post answer to be deleted not found");
 
         }
 

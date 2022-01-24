@@ -1,4 +1,5 @@
 ﻿using apsi.backend.social.Models;
+using apsi.backend.social.Extensions;
 using Apsi.Database;
 using Apsi.Database.Entities;
 using Mapster;
@@ -35,11 +36,15 @@ namespace apsi.backend.social.Services
 
             return dbPost.Id;
         }
-
-        public async Task<List<PostDto>> GetAll(PagingDto paging)
+        public async Task<List<PostDto>> GetAll(PagingSortDto paging)
         {
             return await _context.Posts
                 .OrderBy(x => x.Id)
+                .OrderByDate(
+                    () => paging.SortDate, 
+                    () => paging.SortDescending,
+                    e=>e.OrderBy(x => x.Date), 
+                    e=>e.OrderByDescending(x => x.Date))
                 .Skip(paging.count * paging.page).Take(paging.count)
                 .ProjectToType<PostDto>()
                 .ToListAsync();
@@ -50,6 +55,11 @@ namespace apsi.backend.social.Services
             return await _context.Posts
                 .Where(x => x.Author.Username.Equals(authorPaging.AuthorUsername))
                 .OrderBy(x => x.Id)
+                .OrderByDate(
+                    () => authorPaging.SortDate, 
+                    () => authorPaging.SortDescending,
+                    e=>e.OrderBy(x => x.Date), 
+                    e=>e.OrderByDescending(x => x.Date))
                 .Skip(authorPaging.count * authorPaging.page).Take(authorPaging.count)
                 .ProjectToType<PostDto>()
                 .ToListAsync();
@@ -86,6 +96,11 @@ namespace apsi.backend.social.Services
             return await _context.Posts
                 .Where(x => x.Title.Contains(titlePaging.String))
                 .OrderBy(x => x.Id)
+                .OrderByDate(
+                    () => titlePaging.SortDate, 
+                    () => titlePaging.SortDescending,
+                    e=>e.OrderBy(x => x.Date), 
+                    e=>e.OrderByDescending(x => x.Date))
                 .Skip(titlePaging.count * titlePaging.page).Take(titlePaging.count)
                 .ProjectToType<PostDto>()
                 .ToListAsync();
@@ -96,6 +111,11 @@ namespace apsi.backend.social.Services
             return await _context.Posts
                 .Where(x => x.Text.Contains(textPaging.String))
                 .OrderBy(x => x.Id)
+                .OrderByDate(
+                    () => textPaging.SortDate, 
+                    () => textPaging.SortDescending,
+                    e=>e.OrderBy(x => x.Date), 
+                    e=>e.OrderByDescending(x => x.Date))
                 .Skip(textPaging.count * textPaging.page).Take(textPaging.count)
                 .ProjectToType<PostDto>()
                 .ToListAsync();
