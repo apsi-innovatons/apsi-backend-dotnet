@@ -69,7 +69,7 @@ namespace Apsi.Backend.Social.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<List<PostDto>>> GetAllPosts([FromQuery] PagingDto paging)
+        public async Task<ActionResult<List<PostDto>>> GetAllPosts([FromQuery] PagingSortDto paging)
         {
             return await _postService.GetAll(paging);
         }

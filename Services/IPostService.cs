@@ -9,7 +9,7 @@ namespace apsi.backend.social.Services
 {
     public interface IPostService
     {
-        public Task<List<PostDto>> GetAll(PagingDto paging);
+        public Task<List<PostDto>> GetAll(PagingSortDto paging);
         public Task<PostDto> GetPostById(int id);
         public Task<Post> GetPostByIdDb(int id);
         public Task<List<PostDto>> GetPostsByAuthor(AuthorPagingDto authorPaging);

@@ -1,4 +1,5 @@
 ﻿using apsi.backend.social.Models;
+using apsi.backend.social.Extensions;
 using Apsi.Database;
 using Apsi.Database.Entities;
 using Mapster;
@@ -35,11 +36,15 @@ namespace apsi.backend.social.Services
 
             return dbPost.Id;
         }
-
-        public async Task<List<PostDto>> GetAll(PagingDto paging)
+        public async Task<List<PostDto>> GetAll(PagingSortDto paging)
         {
             return await _context.Posts
                 .OrderBy(x => x.Id)
+                .OrderByDate(
+                    () => paging.SortDate, 
+                    () => paging.SortDescending,
+                    e=>e.OrderBy(x => x.Date), 
+                    e=>e.OrderByDescending(x => x.Date))
                 .Skip(paging.count * paging.page).Take(paging.count)
                 .ProjectToType<PostDto>()
                 .ToListAsync();

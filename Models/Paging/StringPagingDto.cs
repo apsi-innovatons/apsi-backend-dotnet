@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace apsi.backend.social.Models
 {
-    public class StringPagingDto: PagingDto
+    public class StringPagingDto: PagingSortDto
     {
         public string String { get; set; }
     }
