@@ -32,7 +32,7 @@ namespace Apsi.Backend.Social.Controllers
         [HttpGet("SocialGroups")]
         public async Task<ActionResult<List<SocialGroupIdDto>>> Get([FromQuery] SocialGroupPagingDto socialGroupPaging)
         {
-            return await _socialGroupService.Get(socialGroupPaging);
+            return await _socialGroupService.GetByName(socialGroupPaging);
         }
 
         [HttpGet("SocialGroupsAll")]

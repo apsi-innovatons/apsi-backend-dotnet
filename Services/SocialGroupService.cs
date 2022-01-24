@@ -28,8 +28,20 @@ namespace apsi.backend.social.Services
             _context.SaveChanges();
             return dbGroup.Id;
         }
+        public async Task<SocialGroupIdDto> GetById(int id)
+        {
+            return await _context.SocialGroups.Where(x => x.Id.Equals(id))
+                                              .ProjectToType<SocialGroupIdDto>()
+                                              .FirstOrDefaultAsync();
+        }
+        public async Task<SocialGroup> GetByIdDb(int id)
+        {
+            return await _context.SocialGroups.Where(x => x.Id.Equals(id))
+                                              .ProjectToType<SocialGroup>()
+                                              .FirstOrDefaultAsync();
+        }
 
-        public async Task<List<SocialGroupIdDto>> Get(SocialGroupPagingDto socialGroupPaging)
+        public async Task<List<SocialGroupIdDto>> GetByName(SocialGroupPagingDto socialGroupPaging)
         {
             return await _context.SocialGroups.Where(x => x.Name.Contains(socialGroupPaging.Name))
                 .OrderBy(x => x.Id)

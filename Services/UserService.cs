@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -26,10 +27,25 @@ namespace apsi.backend.social.Services
             _context = context;
         }
 
+        public async Task<int?> AddSocialGroupToUser(User user, SocialGroup socialGroup)
+        {
+            if(socialGroup.Users == null)
+            {
+                socialGroup.Users = new List<User>();
+            }
+            socialGroup.Users.Add(user);
+            _context.SocialGroups.Update(socialGroup);
+            var entriesSaved = await _context.SaveChangesAsync();
+
+            return entriesSaved > 0 ? user.Id : null;
+        }
+
         //For authorization testing purposes
         public async Task<User> GetUserById(int id)
         {
-            return await _context.Users.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
+            return await _context.Users.Where(x => x.Id.Equals(id))
+                                       .ProjectToType<User>()
+                                       .FirstOrDefaultAsync();
         }
 
         public async Task<LoggedUserDto> Authenticate(string username, string password)

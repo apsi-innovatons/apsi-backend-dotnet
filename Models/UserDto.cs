@@ -1,4 +1,5 @@
 ﻿using Apsi.Database.Entities.Enums;
+using System.Collections.Generic;
 
 namespace apsi.backend.social.Models
 {
@@ -9,5 +10,6 @@ namespace apsi.backend.social.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public UserRole UserRole { get; set; }
+        public List<SocialGroupIdDto> SocialGroups { get; set; }
     }
 }
